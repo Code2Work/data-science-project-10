@@ -6,54 +6,49 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from tasks.task_manager import *
 
-def test_define_scalar_energy():
-    assert isinstance(define_scalar_energy(), (int, float))
+def test_create_student_score_matrix():
+    mat = create_student_score_matrix(5, 3)
+    assert mat.shape == (5, 3)
+    assert mat.min() >= 0 and mat.max() <= 100
 
-def test_define_crime_vector():
-    vec = define_crime_vector()
-    assert isinstance(vec, np.ndarray)
-    assert vec.ndim == 1
+def test_calculate_mean_per_subject():
+    mat = np.array([[50, 60], [70, 80]])
+    assert np.allclose(calculate_mean_per_subject(mat), [60, 70])
 
-def test_define_energy_matrix():
-    mat = define_energy_matrix()
-    assert isinstance(mat, np.ndarray)
-    assert mat.ndim == 2
+def test_calculate_student_variance():
+    mat = np.array([[50, 70], [80, 80]])
+    assert np.allclose(calculate_student_variance(mat), [100, 0])
 
-def test_add_crime_vectors():
-    v1 = np.array([1,2])
-    v2 = np.array([3,4])
-    result = add_crime_vectors(v1, v2)
-    assert np.array_equal(result, np.array([4,6]))
+def test_apply_magic_curve():
+    mat = np.array([[90, 95], [100, 85]])
+    result = apply_magic_curve(mat)
+    expected = np.clip(mat * 1.1, 0, 100)
+    assert np.allclose(result, expected)
 
-def test_subtract_energy_matrices():
-    m1 = np.array([[5,5],[5,5]])
-    m2 = np.array([[1,2],[3,4]])
-    assert np.array_equal(subtract_energy_matrices(m1, m2), np.array([[4,3],[2,1]]))
+def test_get_top_students():
+    mat = np.array([[90, 95], [60, 65]])
+    result = get_top_students(mat, 80)
+    assert np.array_equal(result, np.array([0]))
 
-def test_transpose_sensor_matrix():
-    mat = np.array([[1,2],[3,4]])
-    trans = transpose_sensor_matrix(mat)
-    assert np.array_equal(trans, np.array([[1,3],[2,4]]))
+def test_subject_wise_max_scores():
+    mat = np.array([[20, 80], [70, 90]])
+    assert np.array_equal(subject_wise_max_scores(mat), [70, 90])
 
-def test_dot_energy_source():
-    mat = np.array([[1,2],[3,4]])
-    vec = np.array([1,1])
-    result = dot_energy_source(mat, vec)
-    assert np.array_equal(result, np.array([3,7]))
+def test_slice_students_by_index():
+    mat = np.arange(20).reshape(5, 4)
+    result = slice_students_by_index(mat, 1, 3)
+    assert result.shape == (2, 4)
 
-def test_why_linear_algebra_is_important():
-    answer = why_linear_algebra_is_important()
-    assert isinstance(answer, str)
-    assert len(answer) > 10
+def test_calculate_subject_std():
+    mat = np.array([[10, 20], [30, 40]])
+    stds = calculate_subject_std(mat)
+    assert len(stds) == 2
 
-def test_average_crime_rate():
-    vec = np.array([5, 15, 25])
-    assert average_crime_rate(vec) == 15.0
-
-def test_max_energy_usage():
-    mat = np.array([[1,2,3], [10,10,10], [5,5,5]])
-    assert max_energy_usage(mat) == 1  # index of max row
-
+def test_normalize_scores():
+    mat = np.array([[0, 50], [100, 100]])
+    norm = normalize_scores(mat)
+    assert norm.min() >= 0 and norm.max() <= 1
+    
 def send_post_request(url: str, data: dict, headers: dict = None):
     try:
         response = requests.post(url, json=data, headers=headers)
