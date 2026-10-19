@@ -10,11 +10,14 @@ Aşağıdaki komutları sırasıyla çalıştırınız.
 * `python -m venv venv`
 * `venv\Scripts\activate` (Windows) — macOS / Linux için: `source venv/bin/activate`
 * `pip install -r requirements.txt` => Tüm bağımlılıkları kurar
-* `python watch.py` => Tüm testleri çalıştırır
+* `python watch.py` => Kaydettikçe testleri otomatik çalıştırır ve **skorunu Kaizu'ya gönderir**
+* `python tests/test_question.py` => Testleri tek seferlik çalıştırır ve **skorunu Kaizu'ya gönderir**
+
+> ⚠️ **Başlamadan önce:** `tests/test_question.py` dosyasının başındaki `USER_ID = 0` satırına **kendi Kaizu ID'ni** yaz (Profile → Settings → User ID). Yazmazsan skorun gönderilmez.
 
 ## Bonus
 * Eğer daha detaylı bir şekilde testlerin içerisine bakmak isterseniz:
-* `pytest tests/test_question.py -s -v`
+* `pytest tests/test_question.py -s -v` (sadece testleri gösterir, **skor göndermez**)
 
 ### Projeye Başlamadan Önce
 * Bu bir **Python** projesidir. Veritabanı kurulumuna, SQL sorgusuna ya da herhangi bir bağlantı ayarına **gerek yoktur**.
